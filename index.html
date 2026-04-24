@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Banner System</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  text-align: center;
+}
+
+/* Top Panel */
+.top-bar {
+  background: rgba(0,0,0,0.5);
+  padding: 10px;
+}
+
+input {
+  padding: 5px;
+  margin: 5px;
+}
+
+button {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+/* Banner */
+.banner {
+  margin: 40px;
+  padding: 40px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+/* Admin Panel */
+.admin {
+  display: none;
+  margin-top: 20px;
+  background: rgba(0,0,0,0.6);
+  padding: 20px;
+}
+
+/* Music Control */
+.music {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.5);
+  padding: 10px;
+  border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+  Public Link:
+  <input id="publicLink" value="" readonly>
+  <button onclick="copyLink('publicLink')">Copy</button>
+
+  Admin Link:
+  <input id="adminLink" value="?admin=true" readonly>
+  <button onclick="copyLink('adminLink')">Copy</button>
+</div>
+
+<div class="banner" id="bannerText">
+  Welcome Banner
+</div>
+
+<!-- Admin Panel -->
+<div class="admin" id="adminPanel">
+  <h2>Admin Panel</h2>
+
+  <input id="newText" placeholder="Edit Banner Text">
+  <button onclick="updateBanner()">Update</button>
+
+  <br><br>
+
+  <input type="file" id="musicUpload">
+  <button onclick="uploadMusic()">Set Music</button>
+
+  <br><br>
+
+  Volume:
+  <input type="range" min="0" max="1" step="0.1" onchange="setVolume(this.value)">
+</div>
+
+<!-- Music -->
+<div class="music">
+  🔊
+  <audio id="audio" controls autoplay loop></audio>
+</div>
+
+<script>
+
+// set links
+document.getElementById("publicLink").value = window.location.origin + window.location.pathname;
+document.getElementById("adminLink").value = window.location.href + "?admin=true";
+
+// copy function
+function copyLink(id){
+  let copyText = document.getElementById(id);
+  copyText.select();
+  document.execCommand("copy");
+  alert("Copied!");
+}
+
+// admin check
+if(window.location.search.includes("admin=true")){
+  let pass = prompt("Enter Admin Password:");
+  if(pass === "1234"){
+    document.getElementById("adminPanel").style.display = "block";
+  }
+}
+
+// banner update
+function updateBanner(){
+  let text = document.getElementById("newText").value;
+  localStorage.setItem("bannerText", text);
+  document.getElementById("bannerText").innerText = text;
+}
+
+// load saved banner
+if(localStorage.getItem("bannerText")){
+  document.getElementById("bannerText").innerText = localStorage.getItem("bannerText");
+}
+
+// music upload
+function uploadMusic(){
+  let file = document.getElementById("musicUpload").files[0];
+  let url = URL.createObjectURL(file);
+  localStorage.setItem("music", url);
+  document.getElementById("audio").src = url;
+}
+
+// load music
+if(localStorage.getItem("music")){
+  document.getElementById("audio").src = localStorage.getItem("music");
+}
+
+// volume control
+function setVolume(val){
+  document.getElementById("audio").volume = val;
+  localStorage.setItem("volume", val);
+}
+
+// load volume
+if(localStorage.getItem("volume")){
+  document.getElementById("audio").volume = localStorage.getItem("volume");
+}
+
+</script>
+
+</body>
+</html>
