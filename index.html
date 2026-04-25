@@ -1,161 +1,274 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Banner System</title>
+<title>AT LIVE GLOBAL </title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
-  color: white;
-  text-align: center;
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:#070b18;
+  color:white;
+  overflow-x:hidden;
 }
 
-/* Top Panel */
-.top-bar {
-  background: rgba(0,0,0,0.5);
-  padding: 10px;
+/* PREMIUM HEADER */
+#topText{
+  text-align:center;
+  padding:18px;
+  font-size:24px;
+  font-weight:bold;
+  cursor:pointer;
+  background:linear-gradient(90deg,#00eaff,#a78bfa,#22c55e,#ff4ecd);
+  background-size:300% 300%;
+  animation:glow 6s infinite linear;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  position:relative;
 }
 
-input {
-  padding: 5px;
-  margin: 5px;
+@keyframes glow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
-button {
-  padding: 6px 10px;
-  cursor: pointer;
+/* HEADLINES */
+.ticker{
+  overflow:hidden;
+  white-space:nowrap;
+  background:rgba(255,255,255,0.05);
+  margin:4px 0;
+  padding:6px;
+}
+.ticker span{
+  display:inline-block;
+  padding-left:100%;
+  animation:move 292s linear infinite;
+}
+@keyframes move{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-100%)}
 }
 
-/* Banner */
-.banner {
-  margin: 40px;
-  padding: 40px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 15px;
-  font-size: 32px;
-  font-weight: bold;
+/* COUNTRY */
+#countryBox{padding:10px;}
+.country{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px;
+  margin:6px 0;
+  background:rgba(255,255,255,0.06);
+  border-radius:8px;
+}
+.flag{
+  width:34px;
+  height:22px;
+  margin-right:8px;
+  animation:wave 99s infinite;
+}
+@keyframes wave{
+  0%{transform:rotate(0)}
+  50%{transform:rotate(2deg) scale(1.05)}
+  100%{transform:rotate(0)}
 }
 
-/* Admin Panel */
-.admin {
-  display: none;
-  margin-top: 20px;
-  background: rgba(0,0,0,0.6);
-  padding: 20px;
+/* ADMIN */
+#adminBtn{
+  display:none;
+  text-align:center;
+  margin:10px;
 }
 
-/* Music Control */
-.music {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  background: rgba(0,0,0,0.5);
-  padding: 10px;
-  border-radius: 10px;
+#adminPanel{
+  display:none;
+  background:#111;
+  padding:10px;
+  margin:10px;
+  border-radius:10px;
 }
+
+/* FLOATING WELCOME */
+.float{
+  position:fixed;
+  font-size:14px;
+  opacity:0;
+  animation:floatAnim 6s linear;
+  color:#ffffff;
+  text-shadow:0 0 10px #00eaff;
+}
+
+@keyframes floatAnim{
+  0%{opacity:0;transform:translateY(0)}
+  30%{opacity:1}
+  100%{opacity:0;transform:translateY(-120px)}
+}
+
+input,button,select{padding:6px;margin:4px;}
+
 </style>
+
 </head>
 
 <body>
 
-<div class="top-bar">
-  Public Link:
-  <input id="publicLink" value="" readonly>
-  <button onclick="copyLink('publicLink')">Copy</button>
+<!-- TOP -->
+<div id="topText">AT-LIVE GLOBAL TIME LINE..</div>
 
-  Admin Link:
-  <input id="adminLink" value="?admin=true" readonly>
-  <button onclick="copyLink('adminLink')">Copy</button>
+<!-- HEADLINES -->
+<div class="ticker"><span id="h1">GLOBAL LIVE SYSTEM</span></div>
+<div class="ticker"><span id="h2">INTERNATIONAL DASHBOARD</span></div>
+<div class="ticker"><span id="h3">WELCOME TO AT LIVE PLATFORM</span></div>
+
+<!-- ADMIN BUTTON -->
+<div id="adminBtn">
+<button onclick="openAdmin()">Admin Panel</button>
 </div>
 
-<div class="banner" id="bannerText">
-  Welcome Banner
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+
+<button onclick="exitAdmin()" style="background:red;color:white;border:none;padding:6px 10px;border-radius:6px;">
+✖ Exit Admin
+</button>
+
+<h3>LOGIN</h3>
+<input id="pass">
+<button onclick="login()">Login</button>
+
+<div id="panel" style="display:none">
+
+<h3>HEADLINES</h3>
+<input id="i1"><button onclick="h1.innerText=i1.value">H1</button><br>
+<input id="i2"><button onclick="h2.innerText=i2.value">H2</button><br>
+<input id="i3"><button onclick="h3.innerText=i3.value">H3</button>
+
+<hr>
+
+<h3>ADD COUNTRY</h3>
+<select id="countryList"></select>
+<button onclick="addCountry()">Add</button>
+
+</div>
 </div>
 
-<!-- Admin Panel -->
-<div class="admin" id="adminPanel">
-  <h2>Admin Panel</h2>
-
-  <input id="newText" placeholder="Edit Banner Text">
-  <button onclick="updateBanner()">Update</button>
-
-  <br><br>
-
-  <input type="file" id="musicUpload">
-  <button onclick="uploadMusic()">Set Music</button>
-
-  <br><br>
-
-  Volume:
-  <input type="range" min="0" max="1" step="0.1" onchange="setVolume(this.value)">
-</div>
-
-<!-- Music -->
-<div class="music">
-  🔊
-  <audio id="audio" controls autoplay loop></audio>
-</div>
+<!-- COUNTRY -->
+<div id="countryBox"></div>
 
 <script>
 
-// set links
-document.getElementById("publicLink").value = window.location.origin + window.location.pathname;
-document.getElementById("adminLink").value = window.location.href + "?admin=true";
+/* PASSWORD */
+let password="198666";
 
-// copy function
-function copyLink(id){
-  let copyText = document.getElementById(id);
-  copyText.select();
-  document.execCommand("copy");
-  alert("Copied!");
+/* UNLOCK */
+let count=0,timer=null,unlocked=false;
+
+topText.onclick=()=>{
+if(!timer){
+timer=setTimeout(()=>{count=0;timer=null},10000);
+}
+count++;
+if(count>=15){
+unlocked=true;
+adminBtn.style.display="block";
+alert("ADMIN UNLOCKED");
+}
+};
+
+/* ADMIN */
+function openAdmin(){
+if(!unlocked)return alert("Locked");
+adminPanel.style.display="block";
 }
 
-// admin check
-if(window.location.search.includes("admin=true")){
-  let pass = prompt("Enter Admin Password:");
-  if(pass === "1234"){
-    document.getElementById("adminPanel").style.display = "block";
-  }
+/* LOGIN */
+function login(){
+if(pass.value===password){
+panel.style.display="block";
+}else alert("Wrong");
 }
 
-// banner update
-function updateBanner(){
-  let text = document.getElementById("newText").value;
-  localStorage.setItem("bannerText", text);
-  document.getElementById("bannerText").innerText = text;
+/* EXIT ADMIN (FULL HIDE FIXED) */
+function exitAdmin(){
+adminPanel.style.display="none";
+panel.style.display="none";
+adminBtn.style.display="none";
+pass.value="";
+unlocked=false;
 }
 
-// load saved banner
-if(localStorage.getItem("bannerText")){
-  document.getElementById("bannerText").innerText = localStorage.getItem("bannerText");
+/* COUNTRIES */
+const data={
+Bangladesh:{tz:"Asia/Dhaka",flag:"https://flagcdn.com/w80/bd.png"},
+India:{tz:"Asia/Kolkata",flag:"https://flagcdn.com/w80/in.png"},
+Pakistan:{tz:"Asia/Karachi",flag:"https://flagcdn.com/w80/pk.png"},
+Nepal:{tz:"Asia/Kathmandu",flag:"https://flagcdn.com/w80/np.png"},
+SriLanka:{tz:"Asia/Colombo",flag:"https://flagcdn.com/w80/lk.png"},
+China:{tz:"Asia/Shanghai",flag:"https://flagcdn.com/w80/cn.png"},
+Japan:{tz:"Asia/Tokyo",flag:"https://flagcdn.com/w80/jp.png"},
+USA:{tz:"America/New_York",flag:"https://flagcdn.com/w80/us.png"},
+UK:{tz:"Europe/London",flag:"https://flagcdn.com/w80/gb.png"},
+UAE:{tz:"Asia/Dubai",flag:"https://flagcdn.com/w80/ae.png"},
+Qatar:{tz:"Asia/Qatar",flag:"https://flagcdn.com/w80/qa.png"},
+Saudi:{tz:"Asia/Riyadh",flag:"https://flagcdn.com/w80/sa.png"},
+Malaysia:{tz:"Asia/Kuala_Lumpur",flag:"https://flagcdn.com/w80/my.png"},
+Turkey:{tz:"Europe/Istanbul",flag:"https://flagcdn.com/w80/tr.png"}
+};
+
+for(let c in data){
+let o=document.createElement("option");
+o.value=c;
+o.innerText=c;
+countryList.appendChild(o);
 }
 
-// music upload
-function uploadMusic(){
-  let file = document.getElementById("musicUpload").files[0];
-  let url = URL.createObjectURL(file);
-  localStorage.setItem("music", url);
-  document.getElementById("audio").src = url;
+let selected=[];
+
+/* ADD COUNTRY */
+function addCountry(){
+selected.push(countryList.value);
+render();
 }
 
-// load music
-if(localStorage.getItem("music")){
-  document.getElementById("audio").src = localStorage.getItem("music");
+/* RENDER */
+function render(){
+countryBox.innerHTML="";
+selected.forEach((c,i)=>{
+let div=document.createElement("div");
+div.className="country";
+div.innerHTML=`
+<div style="display:flex;align-items:center;">
+<img class="flag" src="${data[c].flag}">
+${c}
+</div>
+<div id="t${i}"></div>`;
+countryBox.appendChild(div);
+});
 }
 
-// volume control
-function setVolume(val){
-  document.getElementById("audio").volume = val;
-  localStorage.setItem("volume", val);
+/* TIME */
+setInterval(()=>{
+selected.forEach((c,i)=>{
+let el=document.getElementById("t"+i);
+if(el){
+el.innerText=new Date().toLocaleTimeString("en-US",{timeZone:data[c].tz});
 }
+});
+},1000);
 
-// load volume
-if(localStorage.getItem("volume")){
-  document.getElementById("audio").volume = localStorage.getItem("volume");
-}
+/* FLOATING WELCOME EFFECT */
+setInterval(()=>{
+let f=document.createElement("div");
+f.className="float";
+let arr=["❤️ WELCOME TO AT LIVE","⭐ GLOBAL SYSTEM","✨ LIVE DASHBOARD","🔥 INTERNATIONAL MODE"];
+f.innerText=arr[Math.floor(Math.random()*arr.length)];
+f.style.left=Math.random()*90+"%";
+f.style.top=Math.random()*90+"%";
+document.body.appendChild(f);
+setTimeout(()=>f.remove(),6000);
+},1200);
 
 </script>
 
